@@ -1,11 +1,15 @@
 const express = require('express');
 const routerApi = require('./routes');
 const cors = require('cors');
+const helmet = require('helmet');
+
 const { logErrors, boomErrorHandler, errorHandler } = require('./middlewares/error.handler')
 
 const app = express();
 const port = 3000;
 
+
+app.use(helmet());
 app.use(express.json());
 
 // const whiteList = ['http://localhost:8080', 'etc'];
