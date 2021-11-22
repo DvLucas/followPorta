@@ -1,5 +1,7 @@
 const express = require('express');
 const PortabilitiesService = require('../services/portability.service');
+const validatorHandler = require('../middlewares/validator.handler');
+const { createPortabilitySchema, updatePortabilitySchema, getPortabilitySchema } = require('../schemas/portability.schema');
 
 const router = express.Router();
 const service = new PortabilitiesService();
@@ -9,29 +11,39 @@ router.get('/' ,async (req, res) => {
   res.json(portabilities);
 });
 
-router.get('/:id' ,async (req, res) => {
-  const { id } = req.params;
-  const portability =await service.findOne(id);
+router.get('/:id',
+  validatorHandler(getPortabilitySchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const portability =await service.findOne(id);
 
-  res.json(portability);
+      res.json(portability);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post('/',
+  validatorHandler(createPortabilitySchema, 'body'),
+  async (req, res) => {
+    const body = req.body;
+    const newPortability = await service.create(body);
+    res.status(201).json(newPortability);
 });
 
-router.post('/',async (req, res) => {
-  const body = req.body;
-  const newPortability = await service.create(body);
-  res.status(201).json(newPortability);
-});
-
-router.patch('/:id',async (req, res) => {
+router.patch('/:id',
+  validatorHandler(getPortabilitySchema, 'params'),
+  validatorHandler(updatePortabilitySchema, 'body'),
+  async (req, res, next) => {
   try {
     const { id } = req.params;
     const body = req.body;
     const portability = await service.update(id, body);
     res.json(portability);
   } catch (error) {
-    res.status(404).json({
-      message: error.message
-    });
+    next(error);
   }
 });
 
