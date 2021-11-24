@@ -1,6 +1,6 @@
 const { Client } = require('pg');
 
-async function getCoonnection() {
+async function getConnection() {
   const client = new Client({
     host: 'localhost',
     port: 5432,

@@ -1,13 +1,15 @@
 const faker = require('faker');
 const boom = require('@hapi/boom');
 
-const getConnection = require('../libs/postgres');
+const pool = require('../libs/postgres.pool');
 
 class PortabilitiesService {
 
   constructor(){
     this.portabilities = [];
     this.generate();
+    this.pool = pool;
+    this.pool.on('error', (err) => console.log(err))
   }
 
   generate(){
@@ -38,7 +40,8 @@ class PortabilitiesService {
   }
 
   async find() {
-    return this.portabilities;
+    const rta = await pool.query('SELECT * FROM task');
+    return rta.rows;
   }
 
   async findOne(id) {
