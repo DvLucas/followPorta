@@ -1,23 +1,23 @@
 const express = require('express');
-const PortabilitiesService = require('../services/portability.service');
+const PortabilitiesHisService = require('../services/portabilitiesHis.service');
 const validatorHandler = require('../middlewares/validator.handler');
-const { createPortabilitySchema, updatePortabilitySchema, getPortabilitySchema } = require('../schemas/portability.schema');
+const { createPortabilityHisSchema, getPortabilityHisSchema, updatePortabilityHisSchema } = require('../schemas/portabilitiesHis.schema');
 
 const router = express.Router();
-const service = new PortabilitiesService();
+const service = new PortabilitiesHisService();
 
 router.get('/',
   async (req, res, next) => {
     try {
-      const portabilities = await service.find(req.query);
-      res.json(portabilities);
+      const portabilitiesHis = await service.find(req.query);
+      res.json(portabilitiesHis);
     } catch (error) {
       next(error);
     }
 });
 
 router.get('/:id',
-  validatorHandler(getPortabilitySchema, 'params'),
+  validatorHandler(getPortabilityHisSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -31,26 +31,26 @@ router.get('/:id',
 );
 
 router.post('/',
-  validatorHandler(createPortabilitySchema, 'body'),
+  validatorHandler(createPortabilityHisSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
-      const newPortability = await service.create(body);
-      res.status(201).json(newPortability);
+      const newPortabilityHis = await service.create(body);
+      res.status(201).json(newPortabilityHis);
     } catch (error) {
       next(error);
     }
 });
 
 router.patch('/:id',
-  validatorHandler(getPortabilitySchema, 'params'),
-  validatorHandler(updatePortabilitySchema, 'body'),
+  validatorHandler(getPortabilityHisSchema, 'params'),
+  validatorHandler(updatePortabilityHisSchema, 'body'),
   async (req, res, next) => {
   try {
     const { id } = req.params;
     const body = req.body;
-    const portability = await service.update(id, body);
-    res.json(portability);
+    const portabilityHis = await service.update(id, body);
+    res.json(portabilityHis);
   } catch (error) {
     next(error);
   }

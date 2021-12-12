@@ -1,54 +1,53 @@
 const express = require('express');
-const UsersService = require('../services/users.service');
+const UserTypeService = require('../services/userType.service');
 const validatorHandler = require('../middlewares/validator.handler');
-const { createUserSchema, getUserSchema, updateUserSchema } = require('../schemas/user.schema');
+const { createUserTypeSchema, getUserTypeSchema, updateUserTypeSchema } = require('../schemas/userType.schema');
 
 const router = express.Router();
-const service = new UsersService();
-
+const service = new UserTypeService();
 
 router.get('/' ,
   async (req, res, next) => {
     try {
-      const users = await service.find();
-      res.json(users);
+      const userType = await service.find();
+      res.json(userType);
     } catch (error) {
       next(error);
     }
 });
 
 router.get('/:id' ,
-  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(getUserTypeSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const user = await service.findOne(id);
-      res.json(user);
+      const userType = await service.findOne(id);
+      res.json(userType);
     } catch (error) {
       next(error);
     }
 });
 
 router.post('/',
-  validatorHandler(createUserSchema, 'body'),
+  validatorHandler(createUserTypeSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
-      const newUser = await service.create(body);
-      res.status(201).json(newUser);
+      const newUserType = await service.create(body);
+      res.status(201).json(newUserType);
     } catch (error) {
       next(error)
     }
 });
 
 router.patch('/:id',
-  validatorHandler(updateUserSchema, 'body'),
+  validatorHandler(updateUserTypeSchema, 'body'),
   async (req, res) => {
     try {
       const { id } = req.params;
       const body = req.body;
-      const user = await service.update(id, body);
-      res.json(user);
+      const userType = await service.update(id, body);
+      res.json(userType);
     } catch (error) {
       res.status(404).json({
         message: error.message
@@ -57,7 +56,7 @@ router.patch('/:id',
 });
 
 router.delete('/:id',
-  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(getUserTypeSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;

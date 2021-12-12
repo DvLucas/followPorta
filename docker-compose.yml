@@ -4,20 +4,42 @@ services:
   postgres:
     image: postgres:13
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
     ports:
-      - ${DB_PORT}:${DB_PORT}
+      - ${PGPORT}:${PGPORT}
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
-      - PGADMIN_DEFAULT_PASSWORD=root
+      PGADMIN_DEFAULT_EMAIL: ${PGUSER}@dev.com
+      PGADMIN_DEFAULT_PASSWORD: ${PGPASSWORD}
     ports:
       - "5050:80"
 
+  # mysql:
+  #   restart: always
+  #   image: mysql:5
+  #   environment:
+  #     MYSQL_DATABASE: 'follow_porta'
+  #     MYSQL_USER: 'user'
+  #     MYSQL_PASSWORD: 'admin123'
+  #     MYSQL_ROOT_PASSWORD: 'admin123'
+  #   ports:
+  #     - '3306:3306'
+  #   expose:
+  #   # Opens port 3306 on the container
+  #     - '3306'
+  #   volumes:
+  #     - ./mysql_data:/var/lib/mysql
 
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=admin123
+  #     - PMA_HOST=mysql
+  #   ports:
+  #     - 8080:80
